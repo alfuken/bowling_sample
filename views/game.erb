@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bowling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <style type="text/css" media="screen">
+      table {
+        text-align: right;
+      }
+      table td {
+        padding: 5px;
+      }
+      table td.total_score {
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="jumbotron">
+      <div class="container">
+
+        <div>
+          <% if @game.rolls.first.empty? %>
+
+            <h1>Let's play some bowling!</h1>
+
+          <% else %>
+
+            <table class="table-bordered">
+              <tr>
+                <td width="100">Frame</td>
+                <% 10.times do |n| %>
+                  <td width="50"><%= n+1 %></td>
+                <% end %>
+              </tr>
+              <tr>
+                <td width="100">Pins</td>
+                <% 10.times do |n| %>
+                  <td width="50"><%= @game.frames[n].description if @game.frames[n] %></td>
+                <% end %>
+              </tr>
+              <tr>
+                <td>Score</td>
+                <% 10.times do |n| %>
+                  <td width="50"><%= @game.frames[n].score if @game.frames[n] %></td>
+                <% end %>
+              </tr>
+              <tr><td>Total</td><td colspan="10" class="total_score"><%= @game.total_score %></td></tr>
+            </table>
+
+            <% unless @game.frames.last.errors.empty? %>
+              <br />
+              <div class="alert alert-danger">
+                <%= @game.frames.last.errors.join("<br />") %><br />
+                Please, try again.
+              </div>
+            <% end %>
+
+          <% end %>
+          
+          <% if !@game.nil? && @game.game_over? %>
+            <p><br />Game over! You scored <%= @game.total_score %>.</p>
+          <% else %>
+            <p><br />How much did you score on your last hit?</p>
+    
+            <p>
+              <form action="/" method="post">
+                <div class="btn-group btn-group-lg">
+                  <% (0..10).each do |score| %>
+                    <button type="submit" class="btn btn-default" name="score" value="<%= score %>"><%= score %></button>
+                  <% end %>
+                </div>
+              </form>
+            </p>
+          <% end %>
+        
+          <a href="/new">New game</a>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

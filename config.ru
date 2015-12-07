@@ -1,0 +1,2 @@
+require './bowling'
+run Bowling
